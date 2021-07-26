@@ -1,0 +1,38 @@
+# Top-k-Hottest-Posts
+
+- Config (json)
+    - board urls
+    - Daily check time: 10pm
+    - Instant Check Interval: 1h
+    - Reminder
+        - Mails
+    - TopK
+    - ReplyCntPerDay
+    - ReplyCntPerInterval
+    - Per board
+        - TopK
+        - ReplyCntPerDay
+        - ReplyCntPerInterval
+- Output
+    - 每日总结
+        - P0
+        - 24小时热帖
+            - 24小时内回帖数是Top K或者是大于ReplyCntPerDay
+        - Return
+            - Mail reminder
+            - API: return JSON
+    - 即时提醒
+        - P1
+        - 1h内帖子数量超过ReplyCntPerInterval
+        - Mail reminder (other approachs later: RSS/WeChat, etc.)
+- Implimentation
+    - 伪代码
+    - Diff websites: mysmth, V2EX,
+    - Cross platform, or at least linux support
+    - Will setup a Linux VM later
+    - No need selenium, HTTP call directly
+    - API
+        - Flask
+    - DB
+        - <Link, Checktime, Cnt>
+        - sqlite/txt
