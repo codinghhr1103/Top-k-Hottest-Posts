@@ -1,0 +1,54 @@
+Set up a database by SQLite
+Create two empty tables that record the URL and the count of the follow-ups of each post for every registered board 
+One is for daily_report, which is refreshed every day
+The other one is for instant_check, which is refreshed every specified interval
+The primary key is the link of that post
+
+Read data from the config file
+
+Set up a local SMTP server via smtplib library in order to send emails to the users
+#*******************************************************************************
+Pseududocde for function daily_report
+
+For URL of each registered board
+	Use HTTP get method to get the HTML code of that board
+	For each post in that board
+		Get the URL of that post
+		Get the latest count of the follow-ups of that post
+		If there is no corresponding record in the database,
+			Create a record for that URL with its URL and the latest count
+		Use the URL of that post to retrieve the count of its follow-ups last day from the database
+		Calculate the increment of the count of follow-ups in the past day
+		Store the increment and the URL in a list
+		Update the corresponding count in the database
+	Sort the list in descending order according to the counts
+	Get the URL of the first k elements in that list
+	
+Send the URL of top k hottest posts in each registered board as plain-text emails to the registered users' mailboxes
+#*******************************************************************************
+Pseududocde for function instant_check
+
+For URL of each registered board
+	Use HTTP get method to get the HTML code of that board
+	For each post in that board
+		Get the URL of that post
+		Get the latest count of the follow-ups of that post
+		If there is no corresponding record in the database,
+			Create a record for that URL with its URL and the latest count
+		Use the URL of that post to retrieve the count of its follow-ups last time from the database
+		Calculate the increment of the count of follow-ups last time
+		If the increment is above the specified threshold
+			Store the URL in a list
+		Update the corresponding count in the database
+	
+Send all URL in the list in each registered board as plain-text emails to the registered users' mailboxes
+
+Use Flask to make the code an API, which return the URL of last refreshed records of the top k hottest posts and the posts that have follow-ups of which the number exceeds the specified threshold in predefined interval, as JSON objects
+	
+Use do function in schedule library to run daily_repost every day at specified time
+Use time sleep to run instant_check after by schedule library
+	
+		
+	
+	
+
