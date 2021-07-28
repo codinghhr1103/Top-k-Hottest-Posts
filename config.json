@@ -1,0 +1,29 @@
+{
+  "BoardURLs": [ "https://www.mysmth.net/nForum/#!board/Altaic", "https://www.mysmth.net/nForum/#!board/Art", "https://www.mysmth.net/nForum/#!board/ASCIIart", "https://www.mysmth.net/nForum/#!board/Bible" ],
+  "MailAddress": [ "hhrh1h2r3@gmail.com", "2038357036@qq.com" ],
+  "CommonCase": 
+ {
+    "TopK": 10,
+    "DailyReportTime": 21,
+    "InstantCheckInterval": 60,
+    "ReplyCntPerInterval": 10
+  },
+  "SpecialCase": [
+    "https://www.mysmth.net/nForum/#!board/Altaic",
+    {
+      "TopK": 5,
+      "DailyReportTime": 13,
+      "InstantCheckInterval": 120,
+      "ReplyCntPerInterval": 10
+    },
+
+    "https://www.mysmth.net/nForum/#!board/Art",
+    {
+      "TopK": 5,
+      "DailyReportTime": 20,
+      "InstantCheckInterval": 60,
+      "ReplyCntPerInterval": 10
+    }
+  ]
+
+}
