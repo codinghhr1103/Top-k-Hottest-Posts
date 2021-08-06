@@ -49,4 +49,4 @@ return_daily_report.py is a flask app that runs as a daemon which returns the da
 
 refresh_frequently.py will be executed by cron every m minutes to update the json file that records the instant report
 
-return_instant_report.py is a flask app that runs as a daemon which returns the instant report from the json file on the receipt of users' requests
+return_frequent_report.py is a flask app that runs as a daemon which returns the instant report from the json file on the receipt of users' requests
