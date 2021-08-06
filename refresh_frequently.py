@@ -9,7 +9,7 @@ from pyvirtualdisplay import Display
 app = Flask(__name__)
 @app.route('/')
 """
-def report_daily():
+def report_frequently():
     display = Display(visible=0, size=(800, 600))
     display.start()
 
@@ -33,6 +33,8 @@ def report_daily():
 
     ret = dict()
     for BoardURL in BoardConfigs:
+        threshhold = BoardConfigs[BoardURL]["ReplyCntPerInterval"]
+        ret[BoardURL] = []
         list_diff = []
         """
         # use urlopen to get HTML
@@ -79,20 +81,20 @@ def report_daily():
             relative_path = a.get("href")
             print(relative_path)
 
-            cursor.execute("SELECT EXISTS(SELECT * FROM DailyReport WHERE URL=?)", (relative_path,))
+            cursor.execute("SELECT EXISTS(SELECT * FROM FrequentReport WHERE URL=?)", (relative_path,))
             last_cnt = 0
             if cursor.fetchone():
-                cursor.execute("SELECT cnt FROM DailyReport WHERE URL=?", (relative_path,))
+                cursor.execute("SELECT cnt FROM FrequentReport WHERE URL=?", (relative_path,))
                 for row in cursor:
                     last_cnt = row[0]
             else:
-                cursor.execute("INSERT INTO DailyReport VALUES (?,?)", (relative_path, latest_cnt))
+                cursor.execute("INSERT INTO FrequentReport VALUES (?,?)", (relative_path, latest_cnt))
                 last_cnt = latest_cnt
 
             diff = latest_cnt - last_cnt
             list_diff.append((diff, relative_path))
 
-            cursor.execute("UPDATE DailyReport SET cnt=? WHERE URL=?", (latest_cnt, relative_path))
+            cursor.execute("UPDATE FrequentReport SET cnt=? WHERE URL=?", (latest_cnt, relative_path))
 
         # sort the list in descending order according to the first element, diff
         list_diff.sort(key=lambda x: x[0], reverse=True)
@@ -132,10 +134,10 @@ def report_daily():
             print("latest_cnt: " + str(latest_cnt))
 
             last_cnt = 0
-            cursor.execute("SELECT cnt FROM DailyReport WHERE URL=?", ("\'" + relative_path + "\'",))
+            cursor.execute("SELECT cnt FROM FrequentReport WHERE URL=?", ("\'" + relative_path + "\'",))
             row = cursor.fetchone()
             if row is None:
-                cursor.execute("INSERT INTO DailyReport (URL, cnt) VALUES (?,?)",
+                cursor.execute("INSERT INTO FrequentReport (URL, cnt) VALUES (?,?)",
                                ("\'" + relative_path + "\'", latest_cnt))
                 print("insert" + str(cursor.rowcount))
             else:
@@ -145,28 +147,19 @@ def report_daily():
             print("last_cnt: " + str(last_cnt))
 
             diff = latest_cnt - last_cnt
-            list_diff.append((diff, relative_path))
+            if diff >= threshhold:
+                ret[BoardURL].append("https://www.mysmth.net" + relative_path)
+                print("https://www.mysmth.net" + relative_path)
 
-            cursor.execute("UPDATE DailyReport SET cnt=? WHERE URL=?", (latest_cnt, relative_path))
-
-        # sort the list in descending order according to the first element, diff
-        list_diff.sort(key=lambda x: x[0], reverse=True)
-
-        TopK = BoardConfigs[BoardURL]["TopK"]
-        cur = 0
-        ret[BoardURL] = []
-        while cur < TopK:
-            ret[BoardURL].append("https://www.mysmth.net" + list_diff[cur][1])
-            print("https://www.mysmth.net" + list_diff[cur][1])
-            cur += 1
+            cursor.execute("UPDATE FrequentReport SET cnt=? WHERE URL=?", (latest_cnt, relative_path))
 
         conn.commit()
 
     conn.close()
-    with open("/home/laphy/Top_K_Hottest/daily_result.json", "w", encoding='utf-8') as o:
+    with open("/home/laphy/Top_K_Hottest/frequent_result.json", "w", encoding='utf-8') as o:
         json.dump(ret, o)
 
-report_daily()
+report_frequently()
 
 """
     return jsonify(ret)

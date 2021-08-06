@@ -2,10 +2,10 @@ from flask import Flask
 import json
 
 app = Flask(__name__)
-@app.route('/daily')
-def report_daily():
+@app.route('/frequent')
+def report_frequently():
     # fetch parameters from the config file into BoardConfigs
-    with open("/home/laphy/Top_K_Hottest/daily_result.json", "r") as f:
+    with open("/home/laphy/Top_K_Hottest/frequent_result.json", "r") as f:
         ret = json.load(f)
     return ret
 
