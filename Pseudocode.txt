@@ -42,13 +42,11 @@ For URL of each registered board
 		Update the corresponding count in the database
 	
 Send all URL in the list in each registered board as plain-text emails to the registered users' mailboxes
+#*******************************************************************************
+refresh_daily.py will be executed by cron at predefined time every day to update the json file that records the daily report
 
-Use Flask to make the code an API, which return the URL of last refreshed records of the top k hottest posts and the posts that have follow-ups of which the number exceeds the specified threshold in predefined interval, as JSON objects
-	
-Use do function in schedule library to run daily_repost every day at specified time
-Use time sleep to run instant_check after by schedule library
-	
-		
-	
-	
+return_daily_report.py is a flask app that runs as a daemon which returns the daily report from the json file on the receipt of users' requests
 
+refresh_frequently.py will be executed by cron every m minutes to update the json file that records the instant report
+
+return_instant_report.py is a flask app that runs as a daemon which returns the instant report from the json file on the receipt of users' requests
