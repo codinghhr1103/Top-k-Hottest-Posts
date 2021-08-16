@@ -15,6 +15,25 @@ from datetime import datetime
 app = Flask(__name__)
 @app.route('/')
 """
+
+def dict_to_table(current_ret):
+    content=""""""
+    for BoardURL_ in current_ret:
+        if len(current_ret[BoardURL_]) == 0:
+            continue
+        content += '<table style="background-color:#FFFFE0;border-collapse:collapse;color:#000;font-size:18px;">'
+        content += '<caption style = "background-color:#BDB76B;color:white;width:100%;padding:5px;border:0;">' \
+                   + str(BoardURL_) + '</caption>'
+        # content += '<tr style = "background-color:#BDB76B;color:white;width:50%;padding:5px;border:0;“> <th>Theme</th><th>Path</th><th>Number of new follow-ups</th></tr>'
+
+        for cur in current_ret[BoardURL_]:
+            content += '<tr style="border-bottom:1px dotted #BDB76B;padding:5px;border:0;"> <td><a href="' + \
+                       str(cur[1]) + '">' + str(cur[0]) + '</a></td><td>' + str(cur[2]) + '</td></tr>'
+        content += '</table>'
+
+    return content
+
+
 def report_frequently():
     display = Display(visible=0, size=(800, 600))
     display.start()
@@ -39,11 +58,6 @@ def report_frequently():
 
         for BoardURL in config[MailAddress]:
             threshhold = config[MailAddress][BoardURL]["ReplyCntPerInterval"]
-
-            # when a boardURL is registered by multiple users, it only needs to be look up once
-            if BoardURL in ret.keys():
-                current_ret[BoardURL] = ret[BoardURL]
-                continue
 
             current_ret[BoardURL] = []
 
@@ -120,9 +134,8 @@ def report_frequently():
             # parse HTML by beautiful soup with find() and find_all()
             soup = BeautifulSoup(page, 'html.parser')
 
-            tbody = soup.find("html").find("body").find("section", id="main").find("section", id="body").find("div",
-                                                                                                              class_="b-content").find(
-                "table", class_="board-list tiz").find("tbody")
+            tbody = soup.find("html").find("body").find("section", id="main").find("section", id="body").\
+                find("div",class_="b-content").find("table", class_="board-list tiz").find("tbody")
 
             tr_list = tbody.find_all("tr")
 
@@ -168,32 +181,11 @@ def report_frequently():
             # commit once every time all posts in a boardURL is counted
             conn.commit()
 
-        # when all boardURLs corresponding to a mail address are iterated, send the current_ret
-        content1 = """
-                <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-                <html lang="en">
-                <head>
-                <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-                <title></title>
-                </head>
-                <body>
-                """
-
-        content2 = ''
-        for BoardURL_ in current_ret:
-            content2 += '<table>'
-            content2 += '<caption>' + str(BoardURL_) + '</caption>'
-            for cur in current_ret[BoardURL_]:
-                content2 += '<tr> <td>' + str(cur[0]) + '</td><td>' + str(cur[1]) + '</td></tr>'
-            content2 += '</table><br/>'
-
-        content3 = """
-                </body>
-                </html>
-                """
+        # when all boardURLs corresponding to a mail address are iterated, email the current_ret
+        content = dict_to_table(current_ret)
 
         # email the frequent report to the registered users
-        msg = MIMEText(content1 + content2 + content3, 'html', 'utf-8')
+        msg = MIMEText(content, 'html', 'utf-8')
         msg['From'] = my_sender
         msg['To'] = MailAddress
         msg['Subject'] = 'frequent report ' + str(datetime.now())
