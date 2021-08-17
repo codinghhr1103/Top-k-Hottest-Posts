@@ -43,10 +43,8 @@ For URL of each registered board
 	
 Send all URL in the list in each registered board as plain-text emails to the registered users' mailboxes
 #*******************************************************************************
-refresh_daily.py will be executed by cron at predefined time every day to update the json file that records the daily report
+refresh_daily.py will be executed by cron at predefined time every day to email to daily report to the registered users and update the daily_result.html used by response.py
 
-return_daily_report.py is a flask app that runs as a daemon which returns the daily report from the json file on the receipt of users' requests
+refresh_frequently.py will be executed by cron every m minutes to email to instant report to the registered users and update the frequent_result.html used by response.py
 
-refresh_frequently.py will be executed by cron every m minutes to update the json file that records the instant report
-
-return_frequent_report.py is a flask app that runs as a daemon which returns the instant report from the json file on the receipt of users' requests
+response.py is a flask app that runs as a daemon to response to remote browsers' instant check of daily report and instant report as well as the registration of new board URL and the corresponding personal configuration information
