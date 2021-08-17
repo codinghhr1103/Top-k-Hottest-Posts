@@ -6,15 +6,15 @@ app = Flask(__name__)
 @app.route('/daily')
 def report_daily():
     # fetch parameters from the config file into BoardConfigs
-    with open("/home/laphy/Top_K_Hottest/daily_result.json", "r") as f:
-        ret = json.load(f)
+    with open("/home/laphy/Top_K_Hottest/daily_result.html", "r") as f:
+        ret = f.read()
     return ret
 
 @app.route('/frequent')
 def report_frequently():
     # fetch parameters from the config file into BoardConfigs
-    with open("/home/laphy/Top_K_Hottest/frequent_result.json", "r") as f:
-        ret = json.load(f)
+    with open("/home/laphy/Top_K_Hottest/frequent_result.html", "r") as f:
+        ret = f.read()
     return ret
 
 @app.route('/register',methods = ['POST','GET'])

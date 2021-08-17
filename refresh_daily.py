@@ -206,8 +206,10 @@ def report_daily():
 
     conn.close()
 
-    with open("/home/laphy/Top_K_Hottest/daily_result.json", "w", encoding='utf-8') as o:
-        json.dump(ret, o)
+    content = "Refreshed time:" + str(datetime.now())
+    content += dict_to_table(ret)
+    with open("/home/laphy/Top_K_Hottest/daily_result.html", "w", encoding='utf-8') as o:
+        o.write(content)
 
 
 report_daily()
