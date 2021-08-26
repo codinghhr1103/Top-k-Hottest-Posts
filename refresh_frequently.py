@@ -16,20 +16,26 @@ app = Flask(__name__)
 @app.route('/')
 """
 
+
 def dict_to_table(current_ret):
-    content=""""""
+    content = "<div>"
+
     for BoardURL_ in current_ret:
         if len(current_ret[BoardURL_]) == 0:
             continue
-        content += '<table style="background-color:#FFFFE0;border-collapse:collapse;color:#000;font-size:18px;">'
+        content += '<table width="50%" style="background-color:#FFFFE0;border-collapse:collapse;color:#000;font-size:18px;">'
         content += '<caption style = "background-color:#BDB76B;color:white;width:100%;padding:5px;border:0;">' \
                    + str(BoardURL_) + '</caption>'
         # content += '<tr style = "background-color:#BDB76B;color:white;width:50%;padding:5px;border:0;“> <th>Theme</th><th>Path</th><th>Number of new follow-ups</th></tr>'
 
         for cur in current_ret[BoardURL_]:
             content += '<tr style="border-bottom:1px dotted #BDB76B;padding:5px;border:0;"> <td><a href="' + \
-                       str(cur[1]) + '">' + str(cur[0]) + '</a></td><td>' + str(cur[2]) + '</td></tr>'
+                       str(cur[1]) + '">' + str(cur[0]) + '</a></td><td>' + str(cur[2]) + '</td><td>' \
+                       + str(cur[3]) + '</td></tr>'
+
         content += '</table>'
+
+    content += "</div>"
 
     return content
 
@@ -39,7 +45,7 @@ def report_frequently():
     display.start()
 
     # fetch parameters from the config file into BoardConfigs
-    with open("config.json", "r") as f:
+    with open("/home/laphy/Top_K_Hottest/config.json", "r") as f:
         config = json.load(f)
 
     my_sender = 'HaoranPolarBear@163.com'
@@ -174,7 +180,7 @@ def report_frequently():
 
                 diff = latest_cnt - last_cnt
                 if diff >= threshhold:
-                    current_ret[BoardURL].append((text, "https://www.mysmth.net" + relative_path, diff))
+                    current_ret[BoardURL].append((text, "https://www.mysmth.net" + relative_path, diff, latest_cnt))
 
                 cursor.execute("UPDATE FrequentReport SET cnt=? WHERE URL=?", (latest_cnt, relative_path))
 
