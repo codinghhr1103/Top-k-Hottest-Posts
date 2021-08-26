@@ -22,14 +22,15 @@ def dict_to_table(current_ret):
     for BoardURL_ in current_ret:
         if len(current_ret[BoardURL_]) == 0:
             continue
-        content += '<table width="50%" style="background-color:#FFFFE0;border-collapse:collapse;color:#000;font-size:18px;">'
-        content += '<caption style = "background-color:#BDB76B;color:white;width:100%;padding:5px;border:0;">' \
-                   + str(BoardURL_) + '</caption>'
-        # content += '<tr style = "background-color:#BDB76B;color:white;width:50%;padding:5px;border:0;“> <th>Theme</th><th>Path</th><th>Number of new follow-ups</th></tr>'
+        content += '<table width="50%" style="text-align:center;background-color:#FFFFE0;border-collapse:collapse;color:#000;font-size:18px;">'
+        content += '<caption style = "background-color:#BDB76B;color:white;padding:5px;border:0;"><a href="' \
+                   + str(BoardURL_) + '">' + str(BoardURL_).split("/")[-1]  + '</a></caption>'
+        content += '<tr style = "background-color:#BDB76B;color:blue;padding:5px;border:0;"> <th width="30%">' \
+                   '标题</th><th width="10%">新增数</th><th width="10%">总数</th></tr>'
 
         for cur in current_ret[BoardURL_]:
-            content += '<tr style="border-bottom:1px dotted #BDB76B;padding:5px;border:0;"> <td><a href="' + \
-                       str(cur[1]) + '">' + str(cur[0]) + '</a></td><td>' + str(cur[2]) + '</td><td>' \
+            content += '<tr style="border-bottom:1px dotted #BDB76B;padding:5px;border:0;"> <td width="30%"><a href="' + \
+                       str(cur[1]) + '">' + str(cur[0]) + '</a></td><td width="10%">' + str(cur[2]) + '</td><td width="10%">' \
                        + str(cur[3]) + '</td></tr>'
 
         content += '</table>'
